@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="sample-crud:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>sample-crud</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="sample-crud-0.0.1-SNAPSHOT.war">
+      <element id="artifact" artifact-name="sample-crud:war exploded" />
+    </root>
+  </artifact>
+</component>
