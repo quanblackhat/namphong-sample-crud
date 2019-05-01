@@ -1,51 +1,35 @@
 package com.namephong.samplecrud;
 
+import com.namephong.samplecrud.common.BaseController;
+import com.namephong.samplecrud.models.Article;
 import com.namephong.samplecrud.services.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.validation.Valid;
 
 @Controller
-public class MainController {
+public class MainController extends BaseController {
 
     private static final String LIST_ARTICLES_TEMPLATE  =  "/articles/list.ftl";
-    private static final String LAYOUT_TEMPLATE  =  "fragments/layout";
+    private static final String ADD_ARTICLES_TEMPLATE  =  "/articles/add-edit.ftl";
+
 
     @Autowired
     private ArticleService articleService;
 
-    @Value("${server.servlet.context-path}")
-    private String contextPath;
-
-    @Value("${page_init}")
-    public int FIRST_PAGE;
-    @Value("${page_size}")
-    public int PAGE_SIZE;
-
-    /**
-     * Add dynamic component such as menu, category,..
-     * @param model
-     */
-    @ModelAttribute
-    private void addAttributes(Model model) {
-        model.addAttribute("contextPath", contextPath);
-    }
-
     /**
      * Index page
-     *
      */
     @GetMapping({"/", "/article/list"})
     public ModelAndView index(@RequestParam(name = "page", required = false) Integer page) {
 
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName(LAYOUT_TEMPLATE);
-        modelAndView.addObject("CONTENT", LIST_ARTICLES_TEMPLATE);
-        page = page == null ? 1 : page;
-
+        ModelAndView modelAndView = this.initModelAndView(LIST_ARTICLES_TEMPLATE);
         articleService.loadLatestArticlesPage(modelAndView, page, PAGE_SIZE);
 
         return modelAndView;
@@ -53,19 +37,12 @@ public class MainController {
 
     /**
      * Delete
-     *
      */
     @GetMapping("/article/edit/{id}")
-    public ModelAndView edit(@PathVariable("id") Long id) {
+    public ModelAndView getFormEdit(@PathVariable("id") Long id) {
 
-        System.out.println(id);
-
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName(LAYOUT_TEMPLATE);
-        modelAndView.addObject("CONTENT", LIST_ARTICLES_TEMPLATE);
-
+        ModelAndView modelAndView = this.initModelAndView(LIST_ARTICLES_TEMPLATE);
         articleService.loadLatestArticlesPage(modelAndView, FIRST_PAGE, PAGE_SIZE);
-
         return modelAndView;
     }
 
@@ -74,18 +51,45 @@ public class MainController {
      *
      */
     @GetMapping("/article/delete/{id}")
-    public ModelAndView delete(@PathVariable("id") Long id) {
+    public  String delete(@PathVariable("id") Long id) {
 
         System.out.println(id);
 
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName(LAYOUT_TEMPLATE);
-        modelAndView.addObject("CONTENT", LIST_ARTICLES_TEMPLATE);
+        return "redirect:/article/list";
+    }
 
-        articleService.loadLatestArticlesPage(modelAndView, FIRST_PAGE, PAGE_SIZE);
+    /**
+     * Delete
+     *
+     */
+    @GetMapping("/article/add")
+    public ModelAndView getFormAdd(@ModelAttribute Article article) {
+
+        ModelAndView modelAndView = this.initModelAndView(ADD_ARTICLES_TEMPLATE);
+        modelAndView.addObject("title", "Create New");
+
+        article = article == null ? new Article() : article;
+        modelAndView.addObject("article", article);
+
 
         return modelAndView;
     }
+
+    @PostMapping("/article/save")
+    public String save(@Valid Article article, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+
+        if (!bindingResult.hasErrors()) {
+            model.addAttribute("hasError", false);
+            articleService.save(article);
+        } else {
+            redirectAttributes.addFlashAttribute("article", article);
+            return "redirect:/article/add";
+        }
+        System.out.println("Saved");
+        return "redirect:/article/list";
+    }
+
+
 
 
 

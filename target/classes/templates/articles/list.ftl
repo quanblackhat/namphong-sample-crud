@@ -12,7 +12,7 @@
                     next: '',
                     last: '&raquo;'
                 }).on('page', function (event, page) {
-                    var url = "${contextPath}/?page=" + page;
+                    var url = "<@spring.url '/?page='/>" + page;
                     window.location.replace(url);
                 });
             }
@@ -28,7 +28,8 @@
                         <h4 class="title">Quản lý bài viết</h4>
                         <p class="category">Danh sách bài viết </p>
                         <p class="pull-r">
-                            <button type="submit" class="btn btn-info btn-fill pull-right">Tạo bài viết mới</button>
+                            <a class="btn btn-info btn-fill pull-right"
+                               href="<@spring.url '/article/add'/>">Create New</a>
                         </p>
 
 
@@ -50,8 +51,8 @@
                                     <td>${article.title}</td>
                                     <td>${article.author}</td>
                                     <td>${article.dateCreated?string('dd/MM/yyyy')}</td>
-                                    <td><a href="${contextPath}/article/edit/${article.id}">Chỉnh sửa</a></td>
-                                    <td><a href="${contextPath}/article/delete/${article.id}">Xóa</a></td>
+                                    <td><a href="<@spring.url '/article/edit/${article.id}'/>">Chỉnh sửa</a></td>
+                                    <td><a href="<@spring.url '/article/delete/${article.id}'/>">Xóa</a></td>
                                 </tr>
                             </#list>
                             </tbody>

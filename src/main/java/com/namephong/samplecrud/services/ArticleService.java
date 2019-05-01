@@ -38,6 +38,11 @@ public class ArticleService {
     }
 
     public void save(Article article) {
+
+        //todo - hardcode
+        article.setDateCreatedTimestamp(1555848815L);
+        article.setImage("images/demo.jpg");
+
         articleRepository.save(article);
     }
 
@@ -64,9 +69,6 @@ public class ArticleService {
         modelAndView.addObject("visiblePage", PAGE_SHOW);
         modelAndView.addObject("articles", pages.getContent());
     }
-
-
-
 
 
 

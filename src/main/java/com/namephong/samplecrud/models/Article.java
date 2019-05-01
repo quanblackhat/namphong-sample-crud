@@ -1,6 +1,7 @@
 package com.namephong.samplecrud.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ public class Article implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
@@ -21,15 +23,19 @@ public class Article implements Serializable {
     private String image;
 
     @Column(name = "title")
+    @NotEmpty
     private String title;
 
     @Column(name = "header")
+    @NotEmpty
     private String header;
 
     @Column(name = "content")
+    @NotEmpty
     private String content;
 
     @Column(name = "author")
+    @NotEmpty
     private String author;
 
     @Column(name = "date_create")
