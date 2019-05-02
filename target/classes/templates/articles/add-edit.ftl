@@ -10,6 +10,9 @@
 
                         <form action="<@spring.url '/article/save'/>" method="POST">
                             <@spring.bind "article"/>
+
+                            <input type="text" name="id" hidden value="${article.id!''}">
+
                             <div class="row">
                                 <div class="col-md-8">
                                     <div class="form-group">
@@ -20,7 +23,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label>Author</label>
-                                        <input type="text" name="author" value="author" class="form-control" placeholder="Author">
+                                        <input type="text" name="author" value="${article.author!''}" required class="form-control" placeholder="Author">
                                     </div>
                                 </div>
                             </div>
@@ -29,7 +32,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>Header</label>
-                                        <textarea rows="3" name="header" value="header" required
+                                        <textarea rows="3" name="header" value="${article.header!''}" required
                                                   class="form-control" placeholder="Content"></textarea>
                                     </div>
                                 </div>
@@ -39,7 +42,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>Content</label>
-                                        <textarea rows="10" name="content" value="content"
+                                        <textarea rows="10" name="content" value="${article.content!''}"
                                                   required class="form-control" placeholder="Content"></textarea>
                                     </div>
                                 </div>

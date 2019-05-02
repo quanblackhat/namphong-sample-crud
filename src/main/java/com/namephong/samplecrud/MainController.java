@@ -41,8 +41,13 @@ public class MainController extends BaseController {
     @GetMapping("/article/edit/{id}")
     public ModelAndView getFormEdit(@PathVariable("id") Long id) {
 
-        ModelAndView modelAndView = this.initModelAndView(LIST_ARTICLES_TEMPLATE);
-        articleService.loadLatestArticlesPage(modelAndView, FIRST_PAGE, PAGE_SIZE);
+        ModelAndView modelAndView = this.initModelAndView(ADD_ARTICLES_TEMPLATE);
+        modelAndView.addObject("title", "Edit");
+
+        Article article = articleService.findById(id).isPresent() ? articleService.findById(id).get() : new Article();
+        modelAndView.addObject("article", article);
+
+
         return modelAndView;
     }
 
@@ -53,8 +58,7 @@ public class MainController extends BaseController {
     @GetMapping("/article/delete/{id}")
     public  String delete(@PathVariable("id") Long id) {
 
-        System.out.println(id);
-
+        articleService.deleteArticle(id);
         return "redirect:/article/list";
     }
 
@@ -67,7 +71,6 @@ public class MainController extends BaseController {
 
         ModelAndView modelAndView = this.initModelAndView(ADD_ARTICLES_TEMPLATE);
         modelAndView.addObject("title", "Create New");
-
         article = article == null ? new Article() : article;
         modelAndView.addObject("article", article);
 

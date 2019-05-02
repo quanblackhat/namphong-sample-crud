@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -84,5 +85,13 @@ public class ArticleService {
         modelAndView.addObject("relatedArticlesOne", pages.getContent());
         modelAndView.addObject("mostView", pages.getContent());
         modelAndView.addObject("relatedArticlesTwo", this.loadLatestArticles(pageRequest.next()).getContent());
+    }
+
+    @Transactional
+    public void deleteArticle(Long id) {
+        Optional<Article> articleOptional = articleRepository.findById(id);
+        if (articleOptional.isPresent()) {
+            articleRepository.delete(articleOptional.get());
+        }
     }
 }
