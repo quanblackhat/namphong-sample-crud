@@ -1,4 +1,4 @@
-package com.namephong.samplecrud;
+package com.namephong.samplecrud.Controller;
 
 import com.namephong.samplecrud.common.BaseController;
 import com.namephong.samplecrud.models.Article;
@@ -44,9 +44,12 @@ public class MainController extends BaseController {
         ModelAndView modelAndView = this.initModelAndView(ADD_ARTICLES_TEMPLATE);
         modelAndView.addObject("title", "Edit");
 
-        Article article = articleService.findById(id).isPresent() ? articleService.findById(id).get() : new Article();
-        modelAndView.addObject("article", article);
-
+        if (articleService.findById(id).isPresent()) {
+            Article article = articleService.findById(id).get();
+            modelAndView.addObject("article", article);
+        } else {
+            modelAndView.setViewName("common/404");
+        }
 
         return modelAndView;
     }
@@ -73,7 +76,6 @@ public class MainController extends BaseController {
         modelAndView.addObject("title", "Create New");
         article = article == null ? new Article() : article;
         modelAndView.addObject("article", article);
-
 
         return modelAndView;
     }
